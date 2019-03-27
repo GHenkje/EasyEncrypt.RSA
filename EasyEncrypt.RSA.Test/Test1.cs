@@ -13,21 +13,23 @@
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 using System;
+using System.Security.Cryptography;
 
 namespace EasyEncrypt.RSA.Test
 {
     [TestClass]
-    public class Test1
+    public class UnitTest1
     {
-        const string RandomData = "12345426136136";
         [TestMethod]
         public void TestEncryption()
         {
-            EasyRSAKey Key = EasyRSA.CreateKey();
-            PrivateRSA RSAPrivate = PrivateRSA.Create(Key.PrivateKey);
-            PublicRSA RSAPublic = PublicRSA.Create(Key.PublicKey);
+            const string DATA = "Input";
 
-            byte[] Data = Encoding.UTF8.GetBytes(RandomData);
+            EasyRSAKey Key = EasyRSA.CreateKey();
+            PrivateRSA RSAPrivate = new PrivateRSA(Key.PrivateKey);
+            PublicRSA RSAPublic = new PublicRSA(Key.PublicKey);
+
+            byte[] Data = Encoding.UTF8.GetBytes(DATA);
             byte[] EncryptedData = RSAPublic.Encrypt(Data);
             byte[] DecryptedData = RSAPrivate.Decrypt(EncryptedData);
 
@@ -37,16 +39,21 @@ namespace EasyEncrypt.RSA.Test
         [TestMethod]
         public void TestSigning()
         {
+            byte[] DATA = Encoding.UTF8.GetBytes("12345");
+
             EasyRSAKey Key = EasyRSA.CreateKey();
-            PrivateRSA RSAPrivate = PrivateRSA.Create(Key.PrivateKey);
-            PublicRSA RSAPublic = PublicRSA.Create(Key.PublicKey);
 
-            byte[] Data = Encoding.UTF8.GetBytes(RandomData);
-            Console.WriteLine(Data.Length);
-            byte[] SignedData = RSAPrivate.Sign(Data);
-            Console.WriteLine(SignedData.Length);
+            PrivateRSA RSAPrivate = new PrivateRSA(Key.PrivateKey);
+            PublicRSA RSAPublic = new PublicRSA(Key.PublicKey);
 
-            if (!RSAPublic.Verify(Data, SignedData)) Assert.Fail();
+            byte[] SignedData = RSAPrivate.Sign(DATA);
+            bool Verify = RSAPublic.Verify(DATA, SignedData);
+
+            byte[] SignedData2 = RSAPrivate.Sign(DATA,SHA1.Create());
+            bool Verify2 = RSAPublic.Verify(DATA,SHA1.Create(), SignedData);
+
+            if (!Verify || Verify2)
+                Assert.Fail();
         }
     }
 }

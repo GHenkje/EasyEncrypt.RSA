@@ -19,24 +19,32 @@ namespace EasyEncrypt.RSA
     public class PrivateRSA
     {
         /// <summary>
-        /// Create a new instance of this class with a RSA key.
-        /// </summary>
-        /// <param name="Key">Private RSA key</param>
-        /// <returns>Instance of this class</returns>
-        public static PrivateRSA Create(byte[] Key)
-        {
-            RSACryptoServiceProvider Provider = new RSACryptoServiceProvider();
-            Provider.ImportCspBlob(Key);
-
-            return new PrivateRSA(Provider);
-        }
-
-        /// <summary>
-        /// Constructor
+        /// Create class with an already set up provider.
         /// </summary>
         /// <param name="Provider">The RSA provider</param>
         public PrivateRSA(RSACryptoServiceProvider Provider)
-            => _Provider = Provider;
+            => _Provider = Provider?? throw new ArgumentNullException("Invalid provider, provider is null.");
+        /// <summary>
+        /// Create class with a key and a custom Provider.
+        /// </summary>
+        /// <param name="Provider">The RSA provider</param>
+        /// <param name="Key">Private RSA key</param>
+        public PrivateRSA(RSACryptoServiceProvider Provider, byte[] Key)
+        {
+            _Provider = Provider??throw new ArgumentNullException("Invalid provider, provider is null.");
+
+            if (Key == null) throw new ArgumentException("Invalid key, key is null.");
+            _Provider.ImportCspBlob(Key);
+        }
+        /// <summary>
+        /// Create class with a key.
+        /// </summary>
+        /// <param name="Key">Private RSA key</param>
+        public PrivateRSA(byte[] Key)
+        {
+            _Provider = new RSACryptoServiceProvider();
+            _Provider.ImportCspBlob(Key);
+        }
 
         /// <summary>
         /// Provider for decrypting or signing data.

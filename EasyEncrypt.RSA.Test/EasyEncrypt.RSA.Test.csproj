@@ -4,6 +4,32 @@
     <TargetFramework>netcoreapp2.1</TargetFramework>
 
     <IsPackable>false</IsPackable>
+
+    <SignAssembly>true</SignAssembly>
+
+    <AssemblyOriginatorKeyFile>EasyEncrypt.RSA.snk</AssemblyOriginatorKeyFile>
+
+    <Version>1.0.1</Version>
+
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
+
+    <Description></Description>
+
+    <Copyright></Copyright>
+
+    <PackageLicenseUrl></PackageLicenseUrl>
+
+    <PackageProjectUrl></PackageProjectUrl>
+
+    <RepositoryUrl></RepositoryUrl>
+
+    <PackageTags></PackageTags>
+
+    <Company></Company>
+
+    <Authors></Authors>
+
+    <Product></Product>
   </PropertyGroup>
 
   <ItemGroup>

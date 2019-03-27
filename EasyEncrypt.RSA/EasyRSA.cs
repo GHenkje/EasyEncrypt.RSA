@@ -22,7 +22,7 @@ namespace EasyEncrypt.RSA
         /// </summary>
         /// <param name="KeySize">Keysize of the keys</param>
         /// <returns>The created RSA keys</returns>
-        public static EasyRSAKey CreateKey(int KeySize = 2048)
+        public static EasyRSAKey CreateKey(int KeySize = 4096)
         {
             if (KeySize <= 0) throw new ArgumentException("Could not create key: Invalid KeySize.");
 
