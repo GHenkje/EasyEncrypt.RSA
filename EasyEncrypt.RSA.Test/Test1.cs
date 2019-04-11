@@ -1,7 +1,16 @@
-/* EasyEncrypt.RSA
- * Copyright (C) 2019 Henkje (henkje@pm.me)
+/* EasyEncrypt.RSA.Test
  * 
- * MIT license
+ * Copyright (c) 2019 henkje
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -11,9 +20,9 @@
  */
 
 using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System.Security.Cryptography;
 using System.Text;
 using System;
-using System.Security.Cryptography;
 
 namespace EasyEncrypt.RSA.Test
 {
@@ -23,36 +32,34 @@ namespace EasyEncrypt.RSA.Test
         [TestMethod]
         public void TestEncryption()
         {
-            const string DATA = "Input";
+            EasyRSAKey key = EasyRSA.CreateKey();
+            PrivateRSA RSAPrivate = new PrivateRSA(key.PrivateKey);
+            PublicRSA RSAPublic = new PublicRSA(key.PublicKey);
 
-            EasyRSAKey Key = EasyRSA.CreateKey();
-            PrivateRSA RSAPrivate = new PrivateRSA(Key.PrivateKey);
-            PublicRSA RSAPublic = new PublicRSA(Key.PublicKey);
+            byte[] data = Encoding.UTF8.GetBytes("Input");
+            byte[] encryptedData = RSAPublic.Encrypt(data);
+            byte[] decryptedData = RSAPrivate.Decrypt(encryptedData);
 
-            byte[] Data = Encoding.UTF8.GetBytes(DATA);
-            byte[] EncryptedData = RSAPublic.Encrypt(Data);
-            byte[] DecryptedData = RSAPrivate.Decrypt(EncryptedData);
-
-            if (Convert.ToBase64String(Data) != Convert.ToBase64String(DecryptedData)) Assert.Fail();
+            Assert.AreEqual(Convert.ToBase64String(data), Convert.ToBase64String(decryptedData));
         }
 
         [TestMethod]
         public void TestSigning()
         {
-            byte[] DATA = Encoding.UTF8.GetBytes("12345");
+            byte[] data = Encoding.UTF8.GetBytes("12345");
 
-            EasyRSAKey Key = EasyRSA.CreateKey();
+            EasyRSAKey key = EasyRSA.CreateKey();
+            
+            PrivateRSA RSAPrivate = new PrivateRSA(key.PrivateKey);
+            PublicRSA RSAPublic = new PublicRSA(key.PublicKey);
 
-            PrivateRSA RSAPrivate = new PrivateRSA(Key.PrivateKey);
-            PublicRSA RSAPublic = new PublicRSA(Key.PublicKey);
+            byte[] signedData = RSAPrivate.Sign(data);
+            bool verify = RSAPublic.Verify(data, signedData);
 
-            byte[] SignedData = RSAPrivate.Sign(DATA);
-            bool Verify = RSAPublic.Verify(DATA, SignedData);
+            byte[] signedData2 = RSAPrivate.Sign(data, SHA1.Create());
+            bool verify2 = RSAPublic.Verify(data, SHA1.Create(), signedData);
 
-            byte[] SignedData2 = RSAPrivate.Sign(DATA,SHA1.Create());
-            bool Verify2 = RSAPublic.Verify(DATA,SHA1.Create(), SignedData);
-
-            if (!Verify || Verify2)
+            if (!verify || verify2)
                 Assert.Fail();
         }
     }

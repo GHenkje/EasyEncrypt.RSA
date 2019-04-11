@@ -1,7 +1,16 @@
 ﻿/* EasyEncrypt.RSA
- * Copyright (C) 2019 Henkje (henkje@pm.me)
  * 
- * MIT license
+ * Copyright (c) 2019 henkje
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -21,81 +30,81 @@ namespace EasyEncrypt.RSA
         /// <summary>
         /// Create class with an already set up provider.
         /// </summary>
-        /// <param name="Provider">The RSA provider</param>
-        public PublicRSA(RSACryptoServiceProvider Provider)
-            => _Provider = Provider ?? throw new ArgumentNullException("Invalid provider, provider is null.");
+        /// <param name="provider">The RSA provider</param>
+        public PublicRSA(RSACryptoServiceProvider provider)
+            => this.provider = provider ?? throw new ArgumentNullException("Invalid provider, provider is null.");
         /// <summary>
         /// Create class with a key and a custom Provider.
         /// </summary>
-        /// <param name="Provider">The RSA provider</param>
-        /// <param name="Key">Public RSA key</param>
-        public PublicRSA(RSACryptoServiceProvider Provider, byte[] Key)
+        /// <param name="provider">The RSA provider</param>
+        /// <param name="key">Public RSA key</param>
+        public PublicRSA(RSACryptoServiceProvider provider, byte[] key)
         {
-            _Provider = Provider ?? throw new ArgumentNullException("Invalid provider, provider is null.");
+            this.provider = provider ?? throw new ArgumentNullException("Invalid provider, provider is null.");
 
-            if (Key == null) throw new ArgumentException("Invalid key, key is null.");
-            _Provider.ImportCspBlob(Key);
+            if (key == null) throw new ArgumentException("Invalid key, key is null.");
+            this.provider.ImportCspBlob(key);
         }
         /// <summary>
         /// Create class with a key.
         /// </summary>
-        /// <param name="Key">Public RSA key</param>
-        public PublicRSA(byte[] Key)
+        /// <param name="key">Public RSA key</param>
+        public PublicRSA(byte[] key)
         {
-            _Provider = new RSACryptoServiceProvider();
-            _Provider.ImportCspBlob(Key);
+            this.provider = new RSACryptoServiceProvider();
+            this.provider.ImportCspBlob(key);
         }
 
         /// <summary>
         /// Provider for encrypting or verifying data.
         /// </summary>
-        private RSACryptoServiceProvider _Provider;
+        private RSACryptoServiceProvider provider;
 
         /// <summary>
         /// Encrypt a string and decode with UTF8.
         /// </summary>
-        /// <param name="Text">Text to encrypt</param>
+        /// <param name="text">Text to encrypt</param>
         /// <returns>Encrypted text(string decoded with UTF8)</returns>
-        public string Encrypt(string Text)
-            => Convert.ToBase64String(Encrypt(Encoding.UTF8.GetBytes(Text)));
+        public string Encrypt(string text)
+            => Convert.ToBase64String(Encrypt(Encoding.UTF8.GetBytes(text)));
         /// <summary>
         /// Encrypt a string.
         /// </summary>
-        /// <param name="Text">Text to encrypt</param>
-        /// <param name="Encoder">Encoding used to convert string to byte[]</param>
+        /// <param name="text">Text to encrypt</param>
+        /// <param name="encoder">Encoding used to convert string to byte[]</param>
         /// <returns>Encrypted text(string encoded with Encoder)</returns>
-        public string Encrypt(string Text,Encoding Encoder)
-            => Convert.ToBase64String(Encrypt(Encoder.GetBytes(Text)));
+        public string Encrypt(string text, Encoding encoder)
+            => Convert.ToBase64String(Encrypt(encoder.GetBytes(text)));
         /// <summary>
         /// Encrypt a byte[].
         /// </summary>
-        /// <param name="Data">Data to encrypt.</param>
+        /// <param name="data">Data to encrypt.</param>
         /// <returns>Encrypted data</returns>
-        public byte[] Encrypt(byte[] Data)
-            =>_Provider.Encrypt(Data, false);
+        public byte[] Encrypt(byte[] data)
+            => provider.Encrypt(data, false);
 
         /// <summary>
         /// Verify signed data and use SHA256 as hashingalgorithm.
         /// </summary>
-        /// <param name="Data">Data to compare with SignedData</param>
-        /// <param name="SignedData">Already signed data</param>
+        /// <param name="data">Data to compare with SignedData</param>
+        /// <param name="signedData">Already signed data</param>
         /// <returns>true if data is correct, false if data is incorrect</returns>
-        public bool Verify(byte[] Data, byte[] SignedData)
-            => Verify(Data, SHA256.Create(), SignedData);
+        public bool Verify(byte[] data, byte[] signedData)
+            => Verify(data, SHA256.Create(), signedData);
         /// <summary>
         /// Verify signed data and use a custom hashingalgorithm.
         /// </summary>
-        /// <param name="Data">Data to compare with SignedData</param>
-        /// <param name="SignedData">Already signed data</param>
+        /// <param name="data">Data to compare with SignedData</param>
+        /// <param name="signedData">Already signed data</param>
         /// <returns>true if data is correct, false if data is incorrect</returns>
-        public bool Verify(byte[] Data, HashAlgorithm Algorithm, byte[] SignedData)
-            => _Provider.VerifyData(Data, Algorithm, SignedData);
+        public bool Verify(byte[] data, HashAlgorithm algorithm, byte[] signedData)
+            => provider.VerifyData(data, algorithm, signedData);
 
         /// <summary>
         /// Return the current public key.
         /// </summary>
         /// <returns>Public RSA key</returns>
         public byte[] GetKey()
-            => _Provider.ExportCspBlob(false);
+            => provider.ExportCspBlob(false);
     }
 }

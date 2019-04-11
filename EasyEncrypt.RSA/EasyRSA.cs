@@ -1,7 +1,16 @@
 ﻿/* EasyEncrypt.RSA
- * Copyright (C) 2019 Henkje (henkje@pm.me)
  * 
- * MIT license
+ * Copyright (c) 2019 henkje
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
  * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
  * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
  * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
@@ -20,18 +29,18 @@ namespace EasyEncrypt.RSA
         /// <summary>
         /// Create a new public and private RSA key.
         /// </summary>
-        /// <param name="KeySize">Keysize of the keys</param>
+        /// <param name="keySize">Keysize of the keys</param>
         /// <returns>The created RSA keys</returns>
-        public static EasyRSAKey CreateKey(int KeySize = 4096)
+        public static EasyRSAKey CreateKey(int keySize = 4096)
         {
-            if (KeySize <= 0) throw new ArgumentException("Could not create key: Invalid KeySize.");
+            if (keySize <= 0) throw new ArgumentException("Could not create key: Invalid KeySize.");
 
-            RSACryptoServiceProvider RSA = new RSACryptoServiceProvider(KeySize);
+            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(keySize);
 
-            byte[] PrivateKey = RSA.ExportCspBlob(true);
-            byte[] PublicKey = RSA.ExportCspBlob(false);
+            byte[] privateKey = rsa.ExportCspBlob(true);
+            byte[] publicKey = rsa.ExportCspBlob(false);
 
-            return new EasyRSAKey() { PrivateKey = PrivateKey, PublicKey = PublicKey };
+            return new EasyRSAKey() { PrivateKey = privateKey, PublicKey = publicKey };
         }
     }
 
