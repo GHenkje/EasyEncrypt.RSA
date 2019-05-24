@@ -23,3 +23,4 @@ var decryptedData = RSAPrivate.Decrypt(EncryptedData);//Decrypting data.
 byte[] signedData = RSAPrivate.Sign(Data);//Sign data.
 bool verify = RSAPublic.Verify(Data, signedData);//Verify data.
 ```
+# [Documentation](https://github.com/GHenkje/EasyEncrypt.RSA/wiki)
