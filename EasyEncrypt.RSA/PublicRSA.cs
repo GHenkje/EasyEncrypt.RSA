@@ -58,7 +58,7 @@ namespace EasyEncrypt.RSA
         /// <summary>
         /// Provider for encrypting or verifying data.
         /// </summary>
-        private RSACryptoServiceProvider provider;
+        private readonly RSACryptoServiceProvider provider;
 
         /// <summary>
         /// Encrypt a string and decode with UTF8.

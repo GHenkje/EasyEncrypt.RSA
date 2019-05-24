@@ -11,14 +11,14 @@
     <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
     <SignAssembly>true</SignAssembly>
     <AssemblyOriginatorKeyFile>EasyEncrypt.RSA.snk</AssemblyOriginatorKeyFile>
-    <Version>1.0.1.1</Version>
+    <Version>1.0.1.2</Version>
     <Authors>henkje</Authors>
     <Company>henksharp</Company>
-    <PackageLicenseFile>MIT LICENSE.txt</PackageLicenseFile>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
   </PropertyGroup>
 
   <ItemGroup>
-    <None Include="Z:\Programming\MIT LICENSE.txt">
+    <None Include="..\..\SimpleHashing\LICENSE">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
